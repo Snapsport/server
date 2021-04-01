@@ -12,13 +12,10 @@
  * Copyright 2020 - WebSpace
  */
 
-
-
-import config from '../config/config'
-import app from './express'
-import mongoose from 'mongoose'
-import Session from 'express-session'
-
+import config from "../config/config";
+import app from "./express";
+import mongoose from "mongoose";
+// import Session from 'express-session'
 
 /**
  * Mongoose Connection configurations
@@ -27,33 +24,33 @@ const options = {
   useCreateIndex: true,
   useNewUrlParser: true,
   useFindAndModify: false,
-  useUnifiedTopology: true
-}
+  useUnifiedTopology: true,
+};
 
 /**
  * Creates a global mongoose promise
  */
-mongoose.Promise = global.Promise
+mongoose.Promise = global.Promise;
 
 /**
  * Connect using the config mongoURI and options
  */
-mongoose.connect(config.mongoUri, options)
+mongoose.connect(config.mongoUri, options);
 
 /**
  * Listen for an error
  */
-mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database: ${config.mongoUri}`)
-})
-
+mongoose.connection.on("error", () => {
+  throw new Error(`unable to connect to database: ${config.mongoUri}`);
+});
 
 /**
  * Listen on the specified port, and for any errors
  */
-app.listen(config.port, () => {
-  console.info('Server started on port %s.', config.port)
-})
-.on("error", (err: any) => {
-  console.error("Server Error: ", err)
-})
+app
+  .listen(config.port, () => {
+    console.info("Server started on port %s.", config.port);
+  })
+  .on("error", (err: any) => {
+    console.error("Server Error: ", err);
+  });
