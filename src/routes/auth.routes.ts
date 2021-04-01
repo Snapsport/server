@@ -41,7 +41,7 @@ router.route(`${prefix}/user`)
 /**
  * @method POST - Verify a login with a third party
  */
-router.route(`${prefix}/signin/:provider/:type`)
-    .post(authCtrl.loginWithThirdParty)
+// router.route(`${prefix}/signin/:provider/:type`)
+//     .post(authCtrl.loginWithThirdParty)
 
 export default router

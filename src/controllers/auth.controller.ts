@@ -141,9 +141,15 @@ export const signout = async (req: Request, res: Response) => {
 /**
  * Ensure a user is signed in before continuing
  */
+interface IExpressJWT {
+  secret: string;
+  userProperty: string;
+}
+
 export const requireSignin = expressJwt({
   secret: config.jwtSecret,
   userProperty: "auth",
+  algorithms: ["HS256"]
 });
 
 /**

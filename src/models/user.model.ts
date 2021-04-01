@@ -119,12 +119,15 @@ UserSchema.path('hashed_password').validate(function() {
 
 UserSchema.methods = {
   authenticate(plainText: string) {
+
+    // @ts-ignore
     return this.encryptPassword(plainText) === this.hashed_password
   },
   encryptPassword(password: string) {
-    if (!password) return ''
+    if (!password) return '';
     try {
       return crypto
+        // @ts-ignore
         .createHmac('sha1', this.salt)
         .update(password)
         .digest('hex')
