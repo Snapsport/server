@@ -1,7 +1,7 @@
 {
-  "name": "drinking-game-app-server",
+  "name": "server",
   "version": "1.0.0",
-  "description": "The server which handles authentication, session creation & management for the drinking game application. Written in Node.js, Express.js & TypeScript",
+  "description": "",
   "main": "dist/src/index.js",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
@@ -10,10 +10,6 @@
     "start": "node .",
     "dev": "nodemon --watch src -e ts,ejs --exec npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/drinking-game-app/node-server.git"
   },
   "keywords": [
     "Express.js",
@@ -24,7 +20,6 @@
   "author": "Eoan O'Dea",
   "license": "MIT",
   "dependencies": {
-    "@rossmacd/gamesock-server": "0.4.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "connect-redis": "^4.0.4",

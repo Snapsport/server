@@ -1,4 +1,3 @@
-![Automatic Deployment](https://github.com/drinking-game-app/node-server/workflows/Automatic%20Deployment/badge.svg)
 # Node API with Express Server
 
 ### Description

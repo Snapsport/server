@@ -40,12 +40,6 @@ import config from "./../../config/config";
 import { handleError, handleSuccess } from "../helpers/responseHandler";
 
 /**
- * Helper functions for third party logins
- */
-import { loginWithGoogle } from "../helpers/validateGoogleLogin";
-import { loginWithApple } from "../helpers/validateAppleLogin";
-
-/**
  * Handle a user signin
  *
  * @param req
@@ -115,7 +109,7 @@ export const signout = async (req: Request, res: Response) => {
   /**
    * If there is an access token, run the signout with google function
    */
-  if (accessToken) return signoutwithGoogle(accessToken, res);
+  // if (accessToken) return signoutwithGoogle(accessToken, res);
 
   res.clearCookie("t");
   return res.status(200).json(handleSuccess("Signed out"));
@@ -127,22 +121,22 @@ export const signout = async (req: Request, res: Response) => {
  * @param {string} accessToken
  * @param {Response} res
  */
-const signoutwithGoogle = async (accessToken: string, res: Response) => {
-  try {
-    const user = await User.findOneAndUpdate(
-      { accessToken },
-      { $set: { accessToken: null } },
-      { new: true }
-    );
+// const signoutwithGoogle = async (accessToken: string, res: Response) => {
+//   try {
+//     const user = await User.findOneAndUpdate(
+//       { accessToken },
+//       { $set: { accessToken: null } },
+//       { new: true }
+//     );
 
-    res.clearCookie("t");
+//     res.clearCookie("t");
 
-    return res.status(200).json(handleSuccess(user));
-  } catch (err) {
-    console.log("error signing out with google: ", err);
-    return res.status(200).json(handleError(err));
-  }
-};
+//     return res.status(200).json(handleSuccess(user));
+//   } catch (err) {
+//     console.log("error signing out with google: ", err);
+//     return res.status(200).json(handleError(err));
+//   }
+// };
 
 /**
  * Ensure a user is signed in before continuing
@@ -179,22 +173,22 @@ export const hasAuthorization = (
  * @param {Request} req
  * @param {Response} res
  */
-export const getUser = async(req: RequestMiddleware, res: Response) => {
-    /**
-     * Find a user with this email
-     */
-    const user: any = await User.findById(req.auth._id)
+export const getUser = async (req: RequestMiddleware, res: Response) => {
+  /**
+   * Find a user with this email
+   */
+  const user: any = await User.findById(req.auth._id);
 
-    /**
-     * Return a 200 response with the token and user
-     */
-    return res.status(200).json(
-      handleSuccess({
-        token: req.params.token,
-        user: { name: user.name, email: user.email, _id: user._id },
-      })
-    );
-}
+  /**
+   * Return a 200 response with the token and user
+   */
+  return res.status(200).json(
+    handleSuccess({
+      token: req.params.token,
+      user: { name: user.name, email: user.email, _id: user._id },
+    })
+  );
+};
 
 /**
  * Verifies a login with a third party
@@ -207,69 +201,69 @@ export const getUser = async(req: RequestMiddleware, res: Response) => {
  * @param {Request} req
  * @param {Response} res
  */
-export const loginWithThirdParty = async (req: Request, res: Response) => {
-  const { provider, type } = req.params;
-  let user: any;
-  console.log("provider!", provider, type);
-  try {
-    if (provider === "google")
-      user = await loginWithGoogle(type, req.body.token, req.body.accessToken);
-    else user = await loginWithApple(req.body);
+// export const loginWithThirdParty = async (req: Request, res: Response) => {
+//   const { provider, type } = req.params;
+//   let user: any;
+//   console.log("provider!", provider, type);
+//   try {
+//     if (provider === "google")
+//       user = await loginWithGoogle(type, req.body.token, req.body.accessToken);
+//     else user = await loginWithApple(req.body);
 
-    /**
-     * Either create or update a user in our database
-     * with the email provided from the ticket payload
-     */
-    const response = await User.findOneAndUpdate({ email: user.email }, user, {
-      new: true,
-      upsert: true,
-    });
+//     /**
+//      * Either create or update a user in our database
+//      * with the email provided from the ticket payload
+//      */
+//     const response = await User.findOneAndUpdate({ email: user.email }, user, {
+//       new: true,
+//       upsert: true,
+//     });
 
-    console.log('user created or updated!', response)
+//     console.log("user created or updated!", response);
 
-    /**
-     * Sign the user's unique ID into a
-     * JSON Web Token string payload
-     */
-    const token = jwt.sign(
-      {
-        _id: response._id,
-      },
-      config.jwtSecret
-    );
+//     /**
+//      * Sign the user's unique ID into a
+//      * JSON Web Token string payload
+//      */
+//     const token = jwt.sign(
+//       {
+//         _id: response._id,
+//       },
+//       config.jwtSecret
+//     );
 
-    /**
-     * Set the token as a cookie in the response
-     */
-    res.cookie("t", token, {
-      expires: new Date(Date.now() + parseInt(config.SESSION_TTL, 10)),
-      httpOnly: false,
-    });
+//     /**
+//      * Set the token as a cookie in the response
+//      */
+//     res.cookie("t", token, {
+//       expires: new Date(Date.now() + parseInt(config.SESSION_TTL, 10)),
+//       httpOnly: false,
+//     });
 
-    /**
-     * Create a response object to be sent
-     * back to the frontend
-     */
-    const responseUser: any = {
-      name: response.name,
-      email: response.email,
-      _id: response._id,
-    };
+//     /**
+//      * Create a response object to be sent
+//      * back to the frontend
+//      */
+//     const responseUser: any = {
+//       name: response.name,
+//       email: response.email,
+//       _id: response._id,
+//     };
 
-    /**
-     * If the user has an access token
-     * append it onto the responseUser
-     */
-    // @ts-ignore
-    if (response.accessToken) responseUser.accessToken = response.accessToken;
+//     /**
+//      * If the user has an access token
+//      * append it onto the responseUser
+//      */
+//     // @ts-ignore
+//     if (response.accessToken) responseUser.accessToken = response.accessToken;
 
-    /**
-     * Return a 200 response with the token and user
-     */
-    return res.status(200).json(handleSuccess({ token, user: responseUser }));
-  } catch (err) {
-    console.log('error authenticating third party!', err)
+//     /**
+//      * Return a 200 response with the token and user
+//      */
+//     return res.status(200).json(handleSuccess({ token, user: responseUser }));
+//   } catch (err) {
+//     console.log("error authenticating third party!", err);
 
-    return res.status(401).json(handleError(err.toString()));
-  }
-};
+//     return res.status(401).json(handleError(err.toString()));
+//   }
+// };
